@@ -47,6 +47,10 @@ MyJASSListener.prototype.exitGlobals = function(ctx) {
     this.res.write('<br/>');
 }
 
+MyJASSListener.prototype.enterLoop = function(ctx) {
+    console.log('found a loop');
+}
+
 MyJASSListener.prototype.enterFn = function(ctx) {
     this.res.write('<div style="background-color:rgba(0,145,145,0.05);margin-bottom:1em;">');
     

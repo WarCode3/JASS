@@ -33,7 +33,14 @@ endfunction
 
 function MyAwesomeThing takes integer i, real r returns nothing
     local integer myInt
-    // some other code can go here
+    
+    // some looping code to print numbers :)
+    
+    loop
+        set i = i - 1
+        set i = i*2
+        call PrintNumber(i)
+    endloop
 endfunction
 
 function myEmptyFn takes nothing returns nothing

@@ -22,14 +22,15 @@ type: primitive
     | builtin
     ;
 
-statement: (localDecl | set | call | NEWLINE) NEWLINE;
 statementBlock: statement+ ;
+statement: (loop | localDecl | set | call | NEWLINE) NEWLINE;
 
 decl: type identifier (EQUAL expr)? ;
 
 localDecl: 'local' decl ;
 set: 'set' identifier EQUAL expr ;
 call: 'call' fnCall;
+loop: 'loop' NEWLINE statementBlock? 'endloop' ;
 
 expr: fnCall
     | 'null'
