@@ -17,6 +17,8 @@ MyJASSListener.prototype.constructor = JASSListener;
 
 var $ = {
     each: function(arr, fn) {
+        if(!arr || !arr.length) return;
+        
         for(var i = 0; i < arr.length; i++) {
             fn(arr[i]);
         }
@@ -24,6 +26,27 @@ var $ = {
 }
 
 // Listeners
+MyJASSListener.prototype.enterGlobals = function(ctx) {
+    this.res.write('<b><u>Globals</u></b><br/>');
+}
+
+MyJASSListener.prototype.enterGlobalBlock = function(ctx) {
+    // Write out all the globals
+    $.each(ctx.children, (global) => {
+        if(global instanceof JASSParser.JASSParser.DeclContext) {
+            $.each(global.children, (ch) => {
+                this.res.write(ch.getText() + ' ');
+            })
+            
+            console.log('global');
+            this.res.write('<br/>');
+        }
+    });
+}
+MyJASSListener.prototype.exitGlobals = function(ctx) {
+    this.res.write('<br/>');
+}
+
 MyJASSListener.prototype.enterFn = function(ctx) {
     this.res.write('<div style="background-color:rgba(0,145,145,0.05);margin-bottom:1em;">');
     
@@ -50,18 +73,17 @@ MyJASSListener.prototype.exitFn = function(ctx) {
 
 MyJASSListener.prototype.enterStatement = function(ctx) {
     if(ctx.children[0] instanceof JASSParser.JASSParser.LocalDeclContext) {
-        var localDecl = ctx.children[0];
+        var decl = ctx.children[0].children[1];
         this.res.write(
             '<br/> - ' + 
-            localDecl.children[0].getText() + 
-            localDecl.children[1].getText() + 
-            localDecl.children[2].getText()
+            decl.children[0].getText() + // type
+            decl.children[1].getText() // identifier
         );
         
-        if(localDecl.children[3]) {
+        if(decl.children[2]) { // EQUAL
             this.res.write('<u>');
-            this.res.write(localDecl.children[3].getText());
-            this.res.write(localDecl.children[4].getText());
+            this.res.write(decl.children[2].getText());
+            this.res.write(decl.children[3].getText());
             this.res.write('</u>');
         }
     }

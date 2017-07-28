@@ -9,6 +9,13 @@
 // 
 //===========================================================================
 
+globals
+    // Generated
+    trigger                 gg_trg_Melee_Initialization = null
+    unit                    gg_trg_Primary_Footman = null
+    integer                 gg_MaxHealth = 425
+endglobals
+
 function CreateUnitsForPlayer0 takes unit u returns boolean
     // comment
     local unit u = CreateUnit( p, "hrif", 379.5, -619.2, 147.716 )

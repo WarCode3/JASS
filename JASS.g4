@@ -4,11 +4,14 @@ grammar JASS;
  * Parser Rules
  */
 
-code: (fn NEWLINE)* ;
+code: ((globals | fn) NEWLINE)* ;
+
+globals: 'globals' NEWLINE globalBlock? 'endglobals' ;
+globalBlock: (decl NEWLINE)+;
 
 fn: 'function ' identifier ' takes ' argList ' returns ' (type | 'nothing') NEWLINE  (statementBlock) 'endfunction' ;
 
-identifier: LETTER+ (LETTER | DIGIT)* ;
+identifier: LETTER+ (LETTER | DIGIT | UNDERSCORE)* ;
 argList: (arg COMMA)* arg
        | 'nothing'
        ;
@@ -22,11 +25,14 @@ type: primitive
 statementBlock: statement* ;
 statement: (localDecl | set | call | NEWLINE) NEWLINE;
 
-localDecl: 'local' type identifier (EQUAL expr)? ;
+decl: type identifier (EQUAL expr)? ;
+
+localDecl: 'local' decl ;
 set: 'set' identifier EQUAL expr ;
 call: 'call' fnCall;
 
 expr: fnCall
+    | 'null'
     | value
     ;
 
@@ -52,6 +58,7 @@ EQUAL   : '=' ;
 DIGIT   : [0-9] ;
 NEWLINE : [\r\n]+ ;
 WS      : [ \t] -> channel(HIDDEN) ;
+UNDERSCORE : '_' ;
 
 INT     : '-'? [0-9]+ ;
 FLOAT   : '-'? [0-9]* '.' [0-9]+ ;
