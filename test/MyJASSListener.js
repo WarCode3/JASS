@@ -38,17 +38,12 @@ MyJASSListener.prototype.enterGlobalBlock = function(ctx) {
                 this.res.write(ch.getText() + ' ');
             })
             
-            console.log('global');
             this.res.write('<br/>');
         }
     });
 }
 MyJASSListener.prototype.exitGlobals = function(ctx) {
     this.res.write('<br/>');
-}
-
-MyJASSListener.prototype.enterLoop = function(ctx) {
-    console.log('found a loop');
 }
 
 MyJASSListener.prototype.enterFn = function(ctx) {
