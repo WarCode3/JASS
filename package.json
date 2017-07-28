@@ -1,0 +1,25 @@
+{
+  "name": "JASS",
+  "version": "0.0.1",
+  "description": "Language support for JASS, including grammar, pretty print, and validation, using Antlr",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build-syntax": "build-syntax.bat",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WC3-Nova/JASS"
+  },
+  "author": "ChiefOfGxBxL",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WC3-Nova/JASS/issues"
+  },
+  "homepage": "https://github.com/WC3-Nova/JASS#readme",
+  "dependencies": {
+    "antlr4": "^4.7.0",
+    "antlr4-c3": "^1.1.2"
+  }
+}
