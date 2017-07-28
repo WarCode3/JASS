@@ -39,9 +39,10 @@ function MyAwesomeThing takes integer i, real r returns nothing
     // some looping code to print numbers :)
     
     loop
-        set i = i - 1
-        set i = i*2
+        set i = i - 5
+        set i = i*99
         call PrintNumber(i)
+        exitwhen i == 14
     endloop
 endfunction
 
