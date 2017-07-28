@@ -32,7 +32,9 @@ set: 'set' identifier EQUAL expr ;
 call: 'call' fnCall;
 loop: 'loop' NEWLINE statementBlock? 'endloop' ;
 
-expr: fnCall
+expr: expr ('*' | '/') expr
+    | expr ('+' | '-') expr
+    | fnCall
     | 'null'
     | value
     ;
