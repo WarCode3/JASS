@@ -35,7 +35,6 @@ exitwhen: 'exitwhen' identifier '==' value ;
 
 expr: expr ('*' | '/') expr
     | expr ('+' | '-') expr
-    | fnCall
     | 'null'
     | value
     ;
