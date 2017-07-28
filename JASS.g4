@@ -23,7 +23,7 @@ type: primitive
     ;
 
 statementBlock: statement+ ;
-statement: (loop | localDecl | set | call | NEWLINE) NEWLINE;
+statement: (loop | localDecl | set | call)? NEWLINE;
 
 decl: type identifier (EQUAL expr)? ;
 
