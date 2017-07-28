@@ -23,7 +23,7 @@ type: primitive
     ;
 
 statementBlock: statement+ ;
-statement: (loop | localDecl | set | call)? NEWLINE;
+statement: (loop | localDecl | set | call | exitwhen)? NEWLINE;
 
 decl: type identifier (EQUAL expr)? ;
 
@@ -31,6 +31,7 @@ localDecl: 'local' decl ;
 set: 'set' identifier EQUAL expr ;
 call: 'call' fnCall;
 loop: 'loop' NEWLINE statementBlock? 'endloop' ;
+exitwhen: 'exitwhen' identifier '==' value ;
 
 expr: expr ('*' | '/') expr
     | expr ('+' | '-') expr
