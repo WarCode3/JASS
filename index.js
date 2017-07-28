@@ -1,7 +1,7 @@
 const
     antlr4 = require('antlr4'),
-    JASSLexer = require('./syntax/JASSLexer'),
-    JASSParser = require('./syntax/JASSParser'),
+    JASSLexer = require('./antlr/JASSLexer'),
+    JASSParser = require('./antlr/JASSParser'),
     MyJASSListener = require('./test/MyJassListener').MyJASSListener;
     //c3 = require('antlr4-c3');
 

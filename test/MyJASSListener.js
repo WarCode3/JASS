@@ -1,9 +1,9 @@
 // Generated from JASS.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = require('antlr4/index'),
-    JASSLexer = require('../syntax/JASSLexer'),
-    JASSParser = require('../syntax/JASSParser'),
-    JASSListener = require('../syntax/JASSListener').JASSListener;
+    JASSLexer = require('../antlr/JASSLexer'),
+    JASSParser = require('../antlr/JASSParser'),
+    JASSListener = require('../antlr/JASSListener').JASSListener;
 
 // This class defines a complete listener for a parse tree produced by JASSParser.
 function MyJASSListener(res) {
