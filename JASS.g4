@@ -60,9 +60,5 @@ STRING  : ('"' .*? '"') | ('\'' .*? '\'');
 OPEN_PAR: '(' ;
 CLOSE_PAR: ')' ;
 
-/* 
 SLASH   : '/' ;
-COMMENT : SLASH SLASH .* -> channel(HIDDEN) ;
-
-EMPTY_STR: ( )* ;
- */
+COMMENT : SLASH SLASH .*? NEWLINE -> channel(HIDDEN) ;
