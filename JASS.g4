@@ -9,7 +9,7 @@ code: ((globals | fn) NEWLINE)* ;
 globals: 'globals' NEWLINE globalBlock? 'endglobals' ;
 globalBlock: (decl NEWLINE)+;
 
-fn: 'function ' identifier ' takes ' argList ' returns ' (type | 'nothing') NEWLINE  (statementBlock) 'endfunction' ;
+fn: 'function ' identifier ' takes ' argList ' returns ' (type | 'nothing') NEWLINE  (statementBlock)? 'endfunction' ;
 
 identifier: LETTER+ (LETTER | DIGIT | UNDERSCORE)* ;
 argList: (arg COMMA)* arg
@@ -22,8 +22,8 @@ type: primitive
     | builtin
     ;
 
-statementBlock: statement* ;
 statement: (localDecl | set | call | NEWLINE) NEWLINE;
+statementBlock: statement+ ;
 
 decl: type identifier (EQUAL expr)? ;
 
