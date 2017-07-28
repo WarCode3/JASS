@@ -19,6 +19,7 @@ function CreateUnitsForPlayer0 takes unit u returns boolean
     set u = CreateUnit( p, 'hrif', 379.5, -619.2, 147.716 )
     
     call CreateUnit( p, 'hfoo', 355, 322, 180 )
+    call DoSomething( GetUnit( GenerateUnit() ), GetUnitId('hfoo') )
     
     local unit myNewUnit = CreateUnit(Player(15), 'uloc', 0, 0, 0)
 endfunction
