@@ -12,6 +12,8 @@
 globals
     // Generated
     trigger                 gg_trg_Melee_Initialization = null
+    
+    
     unit                    gg_trg_Primary_Footman = null
     integer                 gg_MaxHealth = 425
 endglobals

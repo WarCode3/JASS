@@ -7,7 +7,7 @@ grammar JASS;
 code: ((globals | fn) NEWLINE)* ;
 
 globals: 'globals' NEWLINE globalBlock? 'endglobals' ;
-globalBlock: (decl NEWLINE)+;
+globalBlock: ((decl?) NEWLINE)+;
 
 fn: 'function ' identifier ' takes ' argList ' returns ' (type | 'nothing') NEWLINE  (statementBlock)? 'endfunction' ;
 
