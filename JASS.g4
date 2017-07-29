@@ -11,7 +11,7 @@ globalBlock: ((decl?) NEWLINE)+;
 
 fn: 'function ' identifier ' takes ' argList ' returns ' (type | 'nothing') NEWLINE  (statementBlock)? 'endfunction' ;
 
-identifier: LETTER+ (LETTER | DIGIT | UNDERSCORE)* ;
+identifier: LETTER (LETTER | DIGIT | UNDERSCORE)* ;
 argList: (arg COMMA)* arg
        | 'nothing'
        ;
