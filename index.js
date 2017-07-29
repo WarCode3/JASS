@@ -26,7 +26,7 @@ http.createServer((req, res) => {
     var listener = new MyJASSListener(res);
     antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener, tree);
     
-    res.write('<textarea readonly style="width:800px;height:300px;">' + input + '</textarea></body></html>');
+    res.write('<textarea readonly style="width:800px;height:400px;">' + input + '</textarea></body></html>');
     res.end();
 }).listen(1000);
 
