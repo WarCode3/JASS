@@ -23,7 +23,7 @@ type: primitive
     ;
 
 statementBlock: statement+ ;
-statement: (loop | localDecl | set | call | exitwhen)? NEWLINE;
+statement: (ifBlock | loop | localDecl | set | call | exitwhen)? NEWLINE;
 
 decl: type identifier (EQUAL expr)? ;
 
@@ -31,7 +31,21 @@ localDecl: 'local' decl ;
 set: 'set' identifier EQUAL expr ;
 call: 'call' fnCall;
 loop: 'loop' NEWLINE statementBlock? 'endloop' ;
-exitwhen: 'exitwhen' identifier '==' value ;
+exitwhen: 'exitwhen' logicalExpr ;
+
+logicalExpr: OPEN_PAR logicalExpr CLOSE_PAR
+           | 'not' logicalExpr
+           | logicalExpr ' and ' logicalExpr
+           | logicalExpr ' or ' logicalExpr
+           | identifier '==' value
+           | identifier
+           | 'true' | 'false'
+           ;
+
+ifBlock: 'if ' logicalExpr ' then' (statementBlock)? (elseifBlock+)? (elseBlock)? 'endif' ;
+elseifBlock: 'elseif ' logicalExpr ' then' (statementBlock)? ;
+elseBlock: 'else' (statementBlock)? ;
+
 
 expr: expr ('*' | '/') expr
     | expr ('+' | '-') expr
@@ -47,6 +61,8 @@ value: identifier
      | INT
      | FLOAT
      | STRING
+     | 'true'
+     | 'false'
      ;
 
 primitive: 'boolean' | 'integer' | 'real' ;

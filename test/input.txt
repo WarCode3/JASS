@@ -9,6 +9,8 @@
 // 
 //===========================================================================
 
+// @reference https://www.hiveworkshop.com/threads/gui-unit-event-v2-4-0-0.201641/
+
 globals
     // Generated
     trigger                 gg_trg_Melee_Initialization = null
@@ -27,8 +29,20 @@ function CreateUnitsForPlayer0 takes unit u returns boolean
     
     set u = CreateUnit( p, 'hrif', 379.5, -619.2, 147.716 )
     
-    call CreateUnit( p, 'hfoo', 355, 322, 180 )
-    call DoSomething( GetUnit( GenerateUnit() ), GetUnitId('hfoo') )
+    if life == 55 then
+        call Hello()
+    elseif not udg_True then
+        call ok(5, "hello")
+    elseif (true and true) or false then
+        call Strange()
+    elseif udg_IsTriggerEnabled then
+        call ThisIsTrue()
+    elseif notEnabled == "notEnabledNope.." then
+        call Nope()
+    else
+        call Yay()
+        set helloWorld = "yes this is nice"
+    endif
     
     local unit myNewUnit = CreateUnit(Player(15), 'uloc', 0, 0, 0)
 endfunction
