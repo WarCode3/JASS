@@ -5,16 +5,12 @@
 <p align='center'>
   Ice Sickle language support for JASS, including grammar, pretty print, and validation<br/><br/>
 </p>
-  
-<hr/>
 
 <p align='center'>
   <a href="#why"><strong>Why?</strong></a> &middot;
   <a href="#language-overview"><strong>Language Overview</strong></a> &middot;
   <a href="#contributing"><strong>Contributing</strong></a>
 </p>
-
-<hr/>
 
 # Why?
 This module provides code support for JASS to be used in Ice Sickle. It's main code is the Antlr4 grammar definition. Since JASS is the native scripting language for WarCraft III, no transpilation is needed, so code remains untouched by the transpiler method.
