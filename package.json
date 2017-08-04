@@ -4,9 +4,9 @@
   "description": "Language support for JASS, including grammar, pretty print, and validation, using Antlr",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
     "build-syntax": "build-syntax.bat",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "debug": "node ./debug/debug.js"
   },
   "repository": {
     "type": "git",
