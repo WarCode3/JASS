@@ -20,31 +20,40 @@ globals
     integer                 gg_MaxHealth = 425
 endglobals
 
+// function blah takes code f returns boolean
+// endfunction
+
 function CreateUnitsForPlayer0 takes unit u returns boolean
     // comment
-    local unit u = CreateUnit( p, "hrif", 379.5, -619.2, 147.716 )
-    local integer unitID = 71
+    local unit u = CreateUnit( p, "hrif", 379.5, -619.2, 147.716 ) // unit code hrif should be in single quotes
+    local integer realID = 71
+    local integer booleanR = false
     local trigger t = rr_SomeOtherTrigger
-    local real life = 55.52
+    local real life = 55.52 // .52
     
-    set u = CreateUnit( p, 'hrif', 379.5, -619.2, 147.716 )
+    set u = CreateUnit( p, 2, 'hrif', 379.5, -619.2, 147.716 )
     
     if life == 55 then
-        call Hello()
+        call Hello(7, 22)
     elseif not udg_True then
-        call ok(5, "hello")
-    elseif (true and true) or false then
-        call Strange()
+        call ok(myVar, 4, "hello")
+    elseif (true or true) and false then
+        call Strange("helloWorld", 54, false)
     elseif udg_IsTriggerEnabled then
-        call ThisIsTrue()
+        call ThisIsTrue(true)
     elseif notEnabled == "notEnabledNope.." then
         call Nope()
+        if nope == 'nope' then // if true then
+            set nestedIf = true
+        endif
     else
         call Yay()
-        set helloWorld = "yes this is nice"
+        set helloWorld = "yes this is nice loop if x == 5"
     endif
     
     local unit myNewUnit = CreateUnit(Player(15), 'uloc', 0, 0, 0)
+    
+    call ChangeIcon("ReplaceableTexture//Units//Human//blah//IronSwords.blp", "")
 endfunction
 
 function MyAwesomeThing takes integer i, real r returns nothing

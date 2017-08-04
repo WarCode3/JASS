@@ -30,6 +30,13 @@ MyJASSListener.prototype.enterGlobals = function(ctx) {
     this.res.write('<b><u>Globals</u></b><br/>');
 }
 
+MyJASSListener.prototype.enterCall = function(ctx) {
+    console.log(ctx.getText());
+    if(ctx.children[1].children.length == 4) {
+        console.log('\t params', ctx.children[1].children[2].getText());
+    }
+}
+
 MyJASSListener.prototype.enterGlobalBlock = function(ctx) {
     // Write out all the globals
     $.each(ctx.children, (global) => {
