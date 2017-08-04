@@ -23,7 +23,7 @@ type: primitive
     ;
 
 statementBlock: statement+ ;
-statement: (ifBlock | loop | localDecl | set | call | exitwhen | return)? NEWLINE;
+statement: (ifBlock | loop | localDecl | set | call | exitwhen)? NEWLINE;
 
 decl: type identifier (EQUAL expr)? ; // ('constant') then initialization is required: constant integer x = 5
 
@@ -32,7 +32,7 @@ set: 'set' identifier EQUAL expr ;
 call: 'call ' fnCall;
 loop: 'loop' NEWLINE statementBlock? 'endloop' ;
 exitwhen: 'exitwhen' logicalExpr ;
-return: ... ;
+// return: ... ;
 
 logicalExpr: OPEN_PAR logicalExpr CLOSE_PAR
            | 'not ' logicalExpr
