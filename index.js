@@ -51,5 +51,5 @@ module.exports = {
 
         return cb(false, []); // Temporary until the logic is implemented
     }
-    
+
 };
