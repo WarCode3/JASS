@@ -1,4 +1,5 @@
 <p align='center'>
+  <img src='https://cdn.rawgit.com/WC3-Nova/JASS/master/logo.svg' width='64' height='64' alt='JASS Logo' /><br />
   <b>JASS</b>
 </p>
 <p align='center'>
