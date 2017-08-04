@@ -3,9 +3,8 @@
   <b>JASS</b>
 </p>
 <p align='center'>
-  Ice Sickle language support for JASS, including grammar, pretty print, and validation<br/><br/>
+  Ice Sickle language support for JASS, including grammar, pretty print, and validation
 </p>
-
 <p align='center'>
   <a href="#why"><strong>Why?</strong></a> &middot;
   <a href="#language-overview"><strong>Language Overview</strong></a> &middot;
