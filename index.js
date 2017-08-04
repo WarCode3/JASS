@@ -1,4 +1,5 @@
 module.exports = {
+
     grammar: 'JASS.g4',
 
     /**
@@ -50,4 +51,5 @@ module.exports = {
 
         return cb(false, []); // Temporary until the logic is implemented
     }
+    
 };
