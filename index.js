@@ -1,6 +1,10 @@
 module.exports = {
 
+    ext: '.jass',
     grammar: 'JASS.g4',
+
+    logo: 'logo.svg',
+    icon: 'icon.png',
 
     /**
      * @method transpiler
