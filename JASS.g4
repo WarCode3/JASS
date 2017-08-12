@@ -1,91 +1,324 @@
+// Define a grammar called Jass
+// Source: https://github.com/inwc3/wc3libs/blob/master/src/main/antlr/Jass.g4
 grammar JASS;
 
-/*
- * Parser Rules
- */
+BOOL_LITERAL:
+	'true' | 'false' ;
+INT_LITERAL:
+		ID_INT_LITERAL
+	|
+		DEC_INT_LITERAL
+	|
+		OCT_INT_LITERAL
+	|
+		HEX_INT_LITERAL
+	;
+DEC_INT_LITERAL:
+	[1-9] [0-9]* | [0-9] ;
+OCT_INT_LITERAL:
+	'0' [0-7]* ;
+HEX_INT_LITERAL:
+	('0' [xX] | '$') [0-9a-fA-F]+ ;
+ID_INT_LITERAL:
+	'\'' ([\u0000-\u0026\u0028-\u00FF]+) '\'' ;
+REAL_LITERAL:
+	[0-9]* '.' [0-9]+ | [0-9]+ '.' ;
+STRING_LITERAL:
+	'"' (~('"' | '\r' | '\n') | '\u002F' | '\\' ('"' | '\\'))* '"' ;
 
-code: ((globals | fn) NEWLINE)* ;
+ID:
+	ID_START (ID_TAIL)* ;
+fragment ID_START:
+	[A-Za-z] ;
+fragment ID_TAIL:
+	[A-Z] | [a-z] | [0-9] | '_' ;
 
-globals: 'globals' NEWLINE globalBlock? 'endglobals' ;
-globalBlock: ((decl?) NEWLINE)+;
+CURLY_L:
+	'{' ;
+CURLY_R:
+	'}' ;
+COMMA:
+	',' ;
+NEW_LINE:
+	('\r\n' | '\n')+ ;
+WS:
+	(' ' | '\t')+ ;
+SLASH:
+    '/' ;
+COMMENT:
+    WS? SLASH SLASH .*? NEW_LINE -> channel(HIDDEN) ;
 
-fn: 'function ' identifier ' takes ' argList ' returns ' (type | 'nothing') NEWLINE  (statementBlock)? 'endfunction' ; // 'constant'?
+root:
+	(WS | NEW_LINE)*
+	(typeDec WS? NEW_LINE (WS | NEW_LINE)*)*
+	(WS | NEW_LINE)*
+	(nativeDec WS? NEW_LINE (WS | NEW_LINE)*)*
+	WS? globalsBlock WS? NEW_LINE
+	(WS | NEW_LINE)*
+	(nativeDec WS? (NEW_LINE | EOF) (WS | NEW_LINE)*)*
+	(WS | NEW_LINE)*
+	(func WS? NEW_LINE (WS | NEW_LINE)*)*
+	(NEW_LINE | WS)* ;
 
-identifier: LETTER (LETTER | DIGIT | UNDERSCORE)* ; // TODO: identifier may not end in an underscore
-argList: (arg COMMA)* arg
-       | 'nothing'
-       ;
+globalsBlock:
+	'globals' WS? NEW_LINE
+	(WS | NEW_LINE)*
+	(globalDec WS? NEW_LINE (WS | NEW_LINE)*)*
+	(WS | NEW_LINE)*
+	'endglobals'
+	;
 
-arg: type identifier ;
+varName:
+	ID ;
+funcName:
+	ID ;
 
-type: primitive
-    | derived
-    ;
+globalDec:
+		type=typeName
+		WS
+		'array'
+		WS
+		name=varName
+	|
+		('constant' WS)?
+		type=typeName
+		WS
+		name=varName
+		(WS? '=' WS? val=expr)?
+	;
 
-statementBlock: statement+ ;
-statement: (ifBlock | loop | localDecl | set | call | exitwhen)? NEWLINE;
+surroundedExpr:
+	'(' WS? expr WS? ')' ;
+expr:
+		expr WS ('and' | 'or') WS expr
+	|
+		'(' WS? expr WS? ')' WS? ('and' | 'or') WS? '(' WS? expr WS? ')'
+	|
+		expr WS ('and' | 'or') WS? '(' WS? expr WS? ')'
+	|
+		'(' WS? expr WS? ')' WS? ('and' | 'or') WS expr
+	|
+		'not' (WS expr | '(' WS? expr WS? ')')
+	|
+		literal
+	|
+		expr WS? ('+' | '-' | '*' | '/') WS? expr
+	|
+		('+' | '-') WS? expr
+	|
+		expr WS? ('<' | '<=' | '==' | '!=' | '>' | '>=') WS? expr
+	|
+		funcExpr
+	|
+		varName
+	|
+		arrayRead
+	|
+		funcRef
+	|
+		'(' WS? expr WS? ')'
+	;
 
-decl: type identifier (EQUAL expr)? ; // ('constant') then initialization is required: constant integer x = 5
+//arithExpr:
+	//expr WS? ('+' | '-' | '*' | '/') WS? expr | ('+' | '-') WS? expr ;
+//compExpr:
+	//expr WS? ('<' | '<=' | '==' | '!=' | '>' | '>=') WS? expr ;
+//boolExpr:
+	//expr WS ('and' | 'or') WS expr | 'not' WS expr ;
+funcExpr:
+	funcName WS? '(' WS? arg_list WS? ')' ;
+arg_list:
+	(expr (WS? ',' WS? expr)*)? ;
+arrayRead:
+	varName '[' expr ']' ;
+funcRef:
+	'function' WS funcName ;
 
-localDecl: 'local' decl ;
-set: 'set' identifier EQUAL expr ;
-call: 'call ' fnCall;
-loop: 'loop' NEWLINE statementBlock? 'endloop' ;
-exitwhen: 'exitwhen' logicalExpr ;
-// return: ... ;
+literal:
+	BOOL_LITERAL | INT_LITERAL | REAL_LITERAL | STRING_LITERAL | funcRef ;
 
-logicalExpr: OPEN_PAR logicalExpr CLOSE_PAR
-           | 'not ' logicalExpr
-           | logicalExpr ' and ' logicalExpr
-           | logicalExpr ' or ' logicalExpr
-           | identifier '==' value // == <= >= < > !=
-           | identifier
-           | 'true' | 'false'
-           ;
+localVarDec:
+	'local'
+	(
+			(
+				WS
+				typeName
+				WS
+				'array'
+				WS
+				name=varName
+			)
+		|
+			(
+				WS
+				typeName
+				WS
+				name=varName
+				(WS? '=' WS? expr)?
+			)
+	)
+	;
+localVarDec_list:
+	localVarDec (WS? NEW_LINE (NEW_LINE | WS)* localVarDec)* ;
 
-ifBlock: 'if ' logicalExpr ' then' (statementBlock)? (elseifBlock)* (elseBlock)? 'endif' ;
-elseifBlock: 'elseif ' logicalExpr ' then' (statementBlock)? ;
-elseBlock: 'else' (statementBlock)? ;
+statement2:
+		callFunc
+	|
+		selection
+	;
+statement:
+		callFunc
+	|
+		setVar
+	|
+		selection
+	|
+		loop
+	|
+		exitwhen
+	|
+		rule_return
+	;
+statement_list:
+	statement (WS? NEW_LINE (NEW_LINE | WS)* statement)* ;
 
+callFunc:
+	'call'
+	WS
+	funcExpr
+	;
+setVar:
+	'set'
+		WS
+		name=varName
+		(WS? '[' index=expr ']')?
+		WS?
+		'='
+		WS?
+		val=expr
+	;
+condition:
+	(surroundedExpr | expr)
+	;
+selection2:
+	'if' WS? condition WS? 'then' WS? NEW_LINE
+		(WS | NEW_LINE)*
+	'endif'
+	;
+selection:
+	'if' WS? condition WS? 'then' WS? NEW_LINE
+		(WS | NEW_LINE)*
+		statement_list?
+		(WS | NEW_LINE)*
+		('elseif' (surroundedExpr | (WS expr)) WS? 'then' WS? NEW_LINE
+			(WS | NEW_LINE)*
+			statement_list?
+			(WS | NEW_LINE)*
+		)*
+		('else' WS? NEW_LINE
+			(WS | NEW_LINE)*
+			statement_list?
+			(WS | NEW_LINE)*
+		)?
+		(WS | NEW_LINE)*
+	'endif'
+	;
+loop:
+	'loop' WS? NEW_LINE
+		(WS | NEW_LINE)*
+		(loopBody WS? NEW_LINE)?
+		(WS | NEW_LINE)*
+	'endloop'
+	;
+exitwhen:
+	'exitwhen'
+		((WS expr)
+	|
+		'(' WS? expr WS? ')')
+	;
+loopBody:
+	loopBodyLine (NEW_LINE (NEW_LINE | WS)* loopBodyLine)* ;
+loopBodyLine:
+	statement_list
+	;
+rule_return:
+	'return'
+	(surroundedExpr | (WS name=expr)?)
+	;
 
-expr: expr ('*' | '/') expr
-    | expr ('+' | '-') expr
-    | 'null'
-    | value
-    ;
+typeName:
+	ID ;
 
-fnCall: identifier OPEN_PAR fnInputList? CLOSE_PAR ;
-fnInputList: (value COMMA)* value ;
+funcDec:
+	('constant')?
+	'function'
+	WS
+	name=ID
+	WS
+	'takes'
+	WS
+	params=funcParam_list
+	WS
+	'returns'
+	WS
+	returnType=funcReturnType
+	;
 
-value: identifier
-     | fnCall
-     | INT
-     | FLOAT
-     | STRING
-     | 'true'
-     | 'false'
-     ;
+func:
+	funcDec
+	WS? NEW_LINE (NEW_LINE | WS)*
+	(body=funcBody WS? NEW_LINE)?
+	(NEW_LINE | WS)*
+	'endfunction'
+	;
 
-primitive: 'boolean' | 'integer' | 'real' | 'string' | 'code' | 'handle' ;
-derived: 'agent' | 'event' | 'player' | 'widget' | 'unit' | 'destructable' | 'item' | 'ability' | 'buff' | 'force' | 'group' | 'trigger' | 'triggercondition' | 'triggeraction' | 'timer' | 'location' | 'region' | 'rect' | 'boolexpr' | 'sound' | 'conditionfunc' | 'filterfunc' | 'unitpool' | 'itempool' | 'race' | 'alliancetype' | 'racepreference' | 'gamestate' | 'igamestate' | 'fgamestate' | 'playerstate' | 'playerscore' | 'playergameresult' | 'unitstate' | 'aidifficulty' | 'eventid' | 'gameevent' | 'playerevent' | 'playerunitevent' | 'unitevent' | 'limitop' | 'widgetevent' | 'dialogevent' | 'unittype' | 'gamespeed' | 'gamedifficulty' | 'gametype' | 'mapflag' | 'mapvisibility' | 'mapsetting' | 'mapdensity' | 'mapcontrol' | 'playerslotstate' | 'volumegroup' | 'camerafield' | 'camerasetup' | 'playercolor' | 'placement' | 'startlocprio' | 'raritycontrol' | 'blendmode' | 'texmapflags' | 'effect' | 'effecttype' | 'weathereffect' | 'terraindeformation' | 'fogstate' | 'fogmodifier' | 'dialog' | 'button' | 'quest' | 'questitem' | 'defeatcondition' | 'timerdialog' | 'leaderboard' | 'multiboard' | 'multiboarditem' | 'trackable' | 'gamecache' | 'version' | 'itemtype' | 'texttag' | 'attacktype' | 'damagetype' | 'weapontype' | 'soundtype' | 'lightning' | 'pathingtype' | 'image' | 'ubersplat' | 'hashtable' ;
+funcReturnType:
+		'nothing'
+	|
+		typeName
+	;
+funcParam_list:
+		'nothing'
+	|
+		(params=funcParam (WS? ',' WS? funcParam)*)
+	;
+funcParam:
+	typeName
+	WS
+	ID
+	;
+funcBody:
+		(localVarDec_list)?
+		(
+			WS?
+			NEW_LINE
+			(WS | NEW_LINE)*
+			statement_list
+		)?
+	|
+		(statement_list?)
+	;
 
-/*
- * Lexer Rules
- */
-LETTER  : [A-Za-z] ;
-COMMA   : ',' ;
-EQUAL   : '=' ;
-DIGIT   : [0-9] ;
-NEWLINE : [\r\n]+ ;
-WS      : [ \t] -> channel(HIDDEN) ;
-UNDERSCORE : '_' ;
-
-INT     : '-'? [0-9]+ ;
-FLOAT   : '-'? [0-9]* '.' [0-9]+ ;
-STRING  : ('"' .*? '"') | ('\'' .*? '\'');
-
-OPEN_PAR: '(' ;
-CLOSE_PAR: ')' ;
-
-SLASH   : '/' ;
-COMMENT : SLASH SLASH .*? NEWLINE -> channel(HIDDEN) ;
+typeDec:
+	'type'
+	WS
+	name=ID
+	WS
+	'extends'
+	WS
+	parent=ID
+	;
+nativeDec:
+	('constant' WS)?
+	'native'
+	WS
+	name=ID
+	WS
+	'takes'
+	WS
+	params=funcParam_list
+	WS
+	'returns'
+	WS
+	returnType=funcReturnType
+;
