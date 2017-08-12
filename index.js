@@ -55,6 +55,16 @@ module.exports = {
         return cb(false, []); // Temporary until the logic is implemented
     },
 
+    /**
+     * @method merge
+     * @param {Array} jassFiles Array of file paths to each JASS file to be merged
+     * @param {String} outputPath Path to save the war3map.j file, including the file name
+     *
+     * Merges several JASS file fragments together, saving the result into one file.
+     *
+     * [!] This method is special to the JASS language. For implementations of
+     * other scripting languages, you do NOT need to implement a merge method.
+     */
     merge: function(jassFiles, outputPath) {
         const
             fs = require('fs-extra'),
