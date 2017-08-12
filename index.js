@@ -39,7 +39,6 @@ module.exports = {
         return cb(false, code);
     },
 
-
     /**
      * @method validate
      * @param {String} code The code in this language
@@ -54,6 +53,45 @@ module.exports = {
         // e.g. if there are errors with the given code, return cb(true, [...])
 
         return cb(false, []); // Temporary until the logic is implemented
+    },
+
+    merge: function(jassFiles, outputPath) {
+        const
+            fs = require('fs-extra'),
+            antlr4 = require('antlr4'),
+            JASSLexer = require('./antlr/JASSLexer'),
+            JASSParser = require('./antlr/JASSParser'),
+            MergeListener = require('./bin/MergeListener').MergeListener;
+
+        var output = {
+            globals: [],
+            functions: []
+        };
+
+        jassFiles.forEach((file) => {
+            var input = fs.readFileSync(file, { encoding: 'utf8' });
+            var chars = new antlr4.InputStream(input);
+            var lexer = new JASSLexer.JASSLexer(chars);
+            var tokens  = new antlr4.CommonTokenStream(lexer);
+            var parser = new JASSParser.JASSParser(tokens);
+            parser.buildParseTrees = true;
+            var tree = parser.code();
+
+            var listener = new MergeListener(output);
+            antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener, tree);
+        });
+
+        // Assemble output text and write the war3map.j file
+        var outputText = '';
+
+        outputText += 'globals\r\n';
+        outputText += output.globals.join('');
+        outputText += 'endglobals\r\n\r\n';
+
+        outputText += output.functions.join('\r\n\r\n');
+
+        console.log('- - - -');
+        fs.writeFileSync(outputPath, outputText);
     }
 
 };
