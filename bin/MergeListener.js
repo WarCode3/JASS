@@ -16,13 +16,11 @@ MergeListener.prototype = Object.create(JASSListener.prototype);
 MergeListener.prototype.constructor = JASSListener;
 
 // Listeners
-MergeListener.prototype.enterGlobalBlock = function(ctx) {
-    console.log('Global', ctx.getText());
+MergeListener.prototype.enterGlobalDec = function(ctx) {
     this.output.globals.push(ctx.getText());
 }
 
-MergeListener.prototype.enterFn = function(ctx) {
-    console.log('Function');
+MergeListener.prototype.enterFunc = function(ctx) {
     this.output.functions.push(ctx.getText());
 }
 
