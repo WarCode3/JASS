@@ -58,14 +58,14 @@ module.exports = {
     /**
      * @method merge
      * @param {Array} jassFiles Array of file paths to each JASS file to be merged
-     * @param {String} outputPath Path to save the war3map.j file, including the file name
      *
-     * Merges several JASS file fragments together, saving the result into one file.
+     * Merges several JASS file fragments together, returning the resultant global
+     * and function declarations.
      *
      * [!] This method is special to the JASS language. For implementations of
      * other scripting languages, you do NOT need to implement a merge method.
      */
-    merge: function(jassFiles, outputPath) {
+    merge: function(jassFiles) {
         const
             fs = require('fs-extra'),
             antlr4 = require('antlr4'),
@@ -74,13 +74,12 @@ module.exports = {
             MergeListener = require('./bin/MergeListener').MergeListener;
 
         var output = {
-            globals: [],
-            functions: []
+            globals: [],        // List of global declarations
+            functions: [],      // Functions in full-text form
+            initFunctions: []   // Array of function names to be called on map init
         };
 
         jassFiles.forEach((file) => {
-            console.log('Merge', file);
-
             var input = fs.readFileSync(file, { encoding: 'utf8' });
             var chars = new antlr4.InputStream(input);
             var lexer = new JASSLexer.JASSLexer(chars);
@@ -93,13 +92,7 @@ module.exports = {
             antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener, tree);
         });
 
-        // Assemble output text and write the war3map.j file
-        fs.writeFileSync(
-            outputPath,
-            'globals\r\n' + output.globals.join('\r\n') +
-            '\r\nendglobals\r\n\r\n' +
-            output.functions.join('\r\n\r\n')
-        );
+        return output;
     }
 
 };

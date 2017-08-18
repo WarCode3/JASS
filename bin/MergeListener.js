@@ -24,4 +24,14 @@ MergeListener.prototype.enterFunc = function(ctx) {
     this.output.functions.push(ctx.getText());
 }
 
+MergeListener.prototype.enterFuncDec = function(ctx) {
+    const triggerName = ctx.name.text;
+    const initPrefix = 'Init_';
+
+    if(triggerName && triggerName.startsWith(initPrefix) && triggerName.length > initPrefix.length) {
+        console.log('Init trigger:', triggerName);
+        this.output.initFunctions.push(triggerName);
+    }
+}
+
 exports.MergeListener = MergeListener;
