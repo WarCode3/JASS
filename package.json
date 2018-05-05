@@ -1,6 +1,6 @@
 {
-  "name": "JASS",
-  "version": "0.0.1",
+  "name": "wc3-jass",
+  "version": "0.0.2",
   "description": "Language support for JASS, including grammar, pretty print, and validation, using Antlr",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/WC3-Nova/JASS#readme",
   "dependencies": {
     "antlr4": "^4.7.0",
-    "antlr4-c3": "^1.1.2"
+    "antlr4-c3": "^1.1.2",
+    "fs-extra": "^6.0.0"
   }
 }
