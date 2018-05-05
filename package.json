@@ -1,6 +1,6 @@
 {
   "name": "wc3-jass",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Language support for JASS, including grammar, pretty print, and validation, using Antlr",
   "main": "index.js",
   "scripts": {
